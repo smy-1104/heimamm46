@@ -1,5 +1,7 @@
 <template>
-  <router-link to="info">路由的链接</router-link>
+
+  <el-button type="success">测试用按钮</el-button>
+
 </template>
 
 <script>
