@@ -48,19 +48,27 @@
             <el-button type="primary" @click="submitForm('loginForm')" class="my-btn">登录</el-button>
           </el-col>
           <el-col class="item" :span="24">
-            <el-button type="primary" class="my-btn my-btn2">注册</el-button>
+            <el-button @click="showRegister" type="primary" class="my-btn my-btn2">注册</el-button>
           </el-col>
         </el-form-item>
       </el-form>
     </div>
     <!-- 右侧图片 -->
     <img src="../../assets/login_banner_ele.png" alt />
+    <registerDialog ref="registerDialog"></registerDialog>
+    <!-- 使用组件记得写在内部 -->
   </div>
 </template>
 <script>
+//导入注册对话框组件
+import registerDialog from './components/registerDialog.vue';
 export default {
   //组件名字
   name: "login",
+  //注册组件
+  components:{
+    registerDialog //省略了 属性值
+  },
   data() {
     return {
       loginForm: {
@@ -107,7 +115,8 @@ export default {
     };
   },
   //方法
-  mathods: {
+ 
+  methods: {
     //提交表单
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -122,6 +131,14 @@ export default {
           return false;
         }
       });
+    },
+    //显示注册对话框
+    //this.$refs可以获取所有设置了ref属性的元素，包括组件
+    //registerDialog和上边设置的属性要一致
+    //也可以用 this.$refs[registerDialog]
+    showRegister(){
+      this.$refs.registerDialog.dialogFormVisible = true;
+      //设置布尔值
     }
   }
 };
