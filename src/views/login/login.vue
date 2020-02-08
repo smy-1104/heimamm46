@@ -31,7 +31,7 @@
           <el-col class="item" :span="17">
             <el-input placeholder="请输入验证码" prefix-icon="el-icon-key" v-model="loginForm.loginCode"></el-input>
           </el-col>
-          <el-col class="item" :span="7">
+          <el-col class="item code-col" :span="7">
             <img src="../../assets/login_captcha.png" alt class="login-code" />
           </el-col>
         </el-form-item>
@@ -184,11 +184,15 @@ export default {
     }
 
     #login-form {
-      //登录验证码
-      .login-code {
-        width: 100%;
+      .code-col {
         height: 40.8px;
+
+        .login-code {
+          width: 100%;
+          height: 40.8px;
+        }
       }
+      //登录验证码
     }
     //协议区域布局水平对齐
     .el-checkbox {
