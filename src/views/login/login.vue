@@ -12,24 +12,24 @@
       </div>
       <!-- 下方表单盒子 -->
       <!-- 登录表单 -->
-      <el-form ref="form" :model="form" label-width="48px" id="login-form">
+      <el-form ref="loginForm" :rules="rules" :model="loginForm" label-width="48px" id="login-form">
         <!-- 手机号 -->
         <el-form-item>
-          <el-input placeholder="请输入手机号" prefix-icon="el-icon-user" v-model="Loginform.phone"></el-input>
+          <el-input placeholder="请输入手机号" prefix-icon="el-icon-user" v-model="loginForm.phone"></el-input>
         </el-form-item>
         <!-- 密码 -->
-        <el-form-item>
+        <el-form-item prop="password">
           <el-input
             placeholder="请输入密码"
             prefix-icon="el-icon-lock"
-            v-model="Loginform.password"
+            v-model="loginForm.password"
             show-password
           ></el-input>
         </el-form-item>
         <!-- 验证码 -->
-        <el-form-item class="login-captcha">
+        <el-form-item prop="loginCode">
           <el-col class="item" :span="17">
-            <el-input placeholder="请输入验证码" prefix-icon="el-icon-key" v-model="Loginform.loginCode"></el-input>
+            <el-input placeholder="请输入验证码" prefix-icon="el-icon-key" v-model="loginForm.loginCode"></el-input>
           </el-col>
           <el-col class="item" :span="7">
             <img src="../../assets/login_captcha.png" alt class="login-code" />
@@ -37,15 +37,15 @@
         </el-form-item>
         <!-- 用户协议 -->
         <el-form-item>
-          <el-checkbox v-model="Loginform.checked">
+          <el-checkbox v-model="loginForm.checked">
             我已阅读并同意
             <el-link class="font-link" type="primary">用户协议</el-link>和
             <el-link class="font-link" type="primary">隐私条款</el-link>
           </el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-col class="item" :span="24" v-model="Loginform.denglu">
-            <el-button type="primary" @click="onSubmit" class="my-btn">登录</el-button>
+          <el-col class="item" :span="24" v-model="loginForm.denglu">
+            <el-button type="primary" @click="submitForm('loginForm')" class="my-btn">登录</el-button>
           </el-col>
           <el-col class="item" :span="24">
             <el-button type="primary" class="my-btn my-btn2">注册</el-button>
@@ -63,7 +63,7 @@ export default {
   name: "login",
   data() {
     return {
-      Loginform: {
+      loginForm: {
         //手机号
         phone: "",
         //密码
@@ -74,8 +74,55 @@ export default {
         denglu: "",
         //是否勾选
         checked: false
+      },
+      //校验规则
+      rules: {
+        password: [
+          {
+            required: true,
+            message: "密码不能为空",
+            trigger: "blur"
+          },
+          {
+            min: 6,
+            max: 12,
+            message: "密码的长度为6-12位",
+            trigger: "blur"
+          }
+        ],
+        loginCode: [
+          {
+            required: true,
+            message: "验证码不能为空",
+            trigger: "blur"
+          },
+          {
+            min: 4,
+            max: 4,
+            message: "验证码的长度为4位",
+            trigger: "blur"
+          }
+        ]
       }
     };
+  },
+  //方法
+  mathods: {
+    //提交表单
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          // alert("对啦!");
+          //验证正确
+          this.$message.success("验证成功");
+        } else {
+          // console.log("验证失败");
+          //验证错误
+          this.$message.error("验证失败");
+          return false;
+        }
+      });
+    }
   }
 };
 </script>
