@@ -33,11 +33,13 @@
       <el-form-item label="验证码" :label-width="formLabelWidth">
         <el-row>
           <el-col :span="16">
-            <el-input v-model="form.code" autocomplete="off"></el-input>
+            <el-input v-model="form.code1" autocomplete="off"></el-input>
           </el-col>
           <el-col :span="7" :offset="1">
             <!-- 点击获取 短信验证码 -->
-            <el-button @click="getSMS">点击获取验证码</el-button>
+            <el-button :disabled="delay != 0" @click="getSMS">
+               {{ delay == 0 ? '点击获取验证码' : `还有${delay}秒继续获取`}}
+            </el-button>
           </el-col>
         </el-row>
       </el-form-item>
@@ -160,12 +162,26 @@ export default {
       delay: 0,
       //本地图片预览地址
       imageUrl: "",
-      //头像上传的接口
+      //头像上传的接口地址
+      uploadUrl: process.env.VUE_APP_URL+ "/uploads"
     };
   },
   methods: {
     //获取短信验证码
     getSMS() {
+        //如果为0开启倒计时
+        if (this.delay == 0){
+          this.delay = 60
+          const interId = setInterval(() => {
+            //时间的递减
+            this.delay--;
+            if(this.delay==0){
+              //清除定时器
+              clearInterval(interId)
+            } 
+          }, 100);
+        }
+
       axios({
         url: process.env.VUE_APP_URL + "/sendsms",
         method: "post",
@@ -177,7 +193,7 @@ export default {
         withCredentials: true
       }).then(res => {
         //成功回调
-        // window.console.log(res);
+        window.console.log(res);
         if (res.data.code===200) {
           this.$message.success('验证码获取成功：'+res.data.data.captcha)
         } else if(res.data.code===0) {
