@@ -6,18 +6,18 @@
     :visible.sync="dialogFormVisible"
     center
   >
-    <el-form :model="form">
-      <el-form-item label="昵称" :label-width="formLabelWidth">
-        <el-input v-model="form.name" autocomplete="off"></el-input>
+    <el-form status-icon  :model="form" :rules="rules" ref="registerForm">
+      <el-form-item label="昵称" prop="username" :label-width="formLabelWidth">
+        <el-input v-model="form.username" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="邮箱" :label-width="formLabelWidth">
+      <el-form-item label="邮箱" prop="email" :label-width="formLabelWidth">
         <el-input v-model="form.email" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="手机" :label-width="formLabelWidth">
+      <el-form-item label="手机" prop="phone" :label-width="formLabelWidth">
         <el-input v-model="form.phone" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="密码" :label-width="formLabelWidth">
-        <el-input v-model="form.password" autocomplete="off"></el-input>
+      <el-form-item label="密码" prop="password" :label-width="formLabelWidth">
+        <el-input show-password v-model="form.password" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="图形码" :label-width="formLabelWidth">
         <el-row>
@@ -48,6 +48,48 @@
 </template>
 
 <script>
+// // 验证用户名的函数
+// const checkName = (rule, value, callback) => {
+//   // value 校验的数据
+//   // console.log(value)
+//   if (value.length < 2) {
+//     callback(new Error("你的名字长度不够哦，检查一下"));
+//   } else {
+//     // 正确的回调
+//     callback();
+//   }
+//   // callback 回调函数 成功失败都需要调用
+// };
+
+// 验证手机号的 函数
+const checkPhone = (rule, value, callback) => {
+  // 接收参数 value
+  // 定义正则表达式
+  const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+  // 使用正则校验格式是否满足
+  if (reg.test(value) == true) {
+    // 对
+    callback();
+  } else {
+    // 错
+    callback(new Error("手机号格式不对哦，请检查"));
+  }
+};
+//验证邮箱的函数
+const checkEmail = (rule, value, callback) => {
+  // 接收参数 value
+  // 定义正则表达式
+  const reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+  // 使用正则校验格式是否满足
+  if (reg.test(value) == true) {
+    // 对
+    callback();
+  } else {
+    // 错
+    callback(new Error("邮箱格式不对哦，请检查"));
+  }
+};
+
 export default {
   data() {
     return {
@@ -55,12 +97,62 @@ export default {
       dialogFormVisible: false,
       //表单数据
       form: {
-        name: "",
-        emali: "",
+        username: "",
+        email: "",
         phone: "",
         password: "",
         imgcode: "",
         code: ""
+      },
+      rules: {
+        username: [
+          {
+            required: true,
+            message: "用户名不能为空",
+            trigger: "blur"
+          },
+          {
+            min: 6,
+            max: 12,
+            message: "用户名长度为6到12位",
+            trigger: "change"
+          }
+        ],
+        password: [
+          {
+            required: true,
+            message: "密码不能为空",
+            trigger: "blur"
+          },
+          {
+            min: 6,
+            max: 12,
+            message: "密码长度为6到12位",
+            trigger: "change"
+          }
+        ],
+        phone: [
+          {
+            required: true,
+            message: "手机号不能为空",
+            trigger: "blur"
+          },
+          {
+            validator: checkPhone,
+            trigger: "blur"
+          }
+        ],
+        email: [
+          {
+            required: true,
+            message: "密码不能为空",
+            trigger: "blur"
+          },
+          {
+            validator: checkEmail,
+            trigger: "blur"
+          }
+        ]
       },
       //左侧的文本宽度
       formLabelWidth: "62px"
