@@ -6,7 +6,7 @@
     :visible.sync="dialogFormVisible"
     center
   >
-    <el-form status-icon  :model="form" :rules="rules" ref="registerForm">
+    <el-form status-icon :model="form" :rules="rules" ref="registerForm">
       <el-form-item label="昵称" prop="username" :label-width="formLabelWidth">
         <el-input v-model="form.username" autocomplete="off"></el-input>
       </el-form-item>
@@ -22,9 +22,10 @@
       <el-form-item label="图形码" :label-width="formLabelWidth">
         <el-row>
           <el-col :span="16">
-            <el-input v-model="form.imgcode" autocomplete="off"></el-input>
+            <el-input v-model="form.code" autocomplete="off"></el-input>
           </el-col>
           <el-col :span="7" :offset="1" class="register-box">
+            <!-- 图片验证码 -->
             <img @click="changeCode" class="register-code" :src="codeURL" alt />
           </el-col>
         </el-row>
@@ -35,7 +36,8 @@
             <el-input v-model="form.code" autocomplete="off"></el-input>
           </el-col>
           <el-col :span="7" :offset="1">
-            <el-button>点击获取验证码</el-button>
+            <!-- 点击获取 短信验证码 -->
+            <el-button @click="getSMS">点击获取验证码</el-button>
           </el-col>
         </el-row>
       </el-form-item>
@@ -48,18 +50,9 @@
 </template>
 
 <script>
-// // 验证用户名的函数
-// const checkName = (rule, value, callback) => {
-//   // value 校验的数据
-//   // console.log(value)
-//   if (value.length < 2) {
-//     callback(new Error("你的名字长度不够哦，检查一下"));
-//   } else {
-//     // 正确的回调
-//     callback();
-//   }
-//   // callback 回调函数 成功失败都需要调用
-// };
+
+//导入 axios
+import axios from "axios";
 
 // 验证手机号的 函数
 const checkPhone = (rule, value, callback) => {
@@ -90,8 +83,6 @@ const checkEmail = (rule, value, callback) => {
   }
 };
 
-// import axios from "axios";
-
 export default {
   data() {
     return {
@@ -99,13 +90,18 @@ export default {
       dialogFormVisible: false,
       //表单数据
       form: {
+        //昵称
         username: "",
+        //邮箱
         email: "",
+        //手机号
         phone: "",
+        //密码
         password: "",
-        imgcode: "",
+        //图片验证码
         code: ""
       },
+      //校验规则
       rules: {
         username: [
           {
@@ -159,18 +155,42 @@ export default {
       //左侧的文本宽度
       formLabelWidth: "62px",
       //验证码图片地址
-      codeURL:process.env.VUE_APP_URL+"/captcha?type=sendsms",
+      codeURL: process.env.VUE_APP_URL + "/captcha?type=sendsms",
+      //倒计时时间
+      delay: 0,
+      //本地图片预览地址
+      imageUrl: "",
+      //头像上传的接口
     };
   },
   methods: {
-    // changeCode(){
-    //   this.codeURL=process.env.VUE_APP_URL + "captcha?type=sendsms&t=" + Date.now();
-    // },
+    //获取短信验证码
+    getSMS() {
+      axios({
+        url: process.env.VUE_APP_URL + "/sendsms",
+        method: "post",
+        data: {
+          code: this.form.code,
+          phone: this.form.phone
+        },
+        //是否跨域携带cookie 默认是false
+        withCredentials: true
+      }).then(res => {
+        //成功回调
+        // window.console.log(res);
+        if (res.data.code===200) {
+          this.$message.success('验证码获取成功：'+res.data.data.captcha)
+        } else if(res.data.code===0) {
+          this.$message.error(res.data.message)
+        }
+      });
+    },
+    //重新生成验证码
     changeCode() {
       this.codeURL =
         process.env.VUE_APP_URL + "/captcha?type=sendsms&t=" + Date.now();
     }
-  },
+  }
 };
 </script>
 
