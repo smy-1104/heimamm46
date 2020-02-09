@@ -25,7 +25,7 @@
             <el-input v-model="form.imgcode" autocomplete="off"></el-input>
           </el-col>
           <el-col :span="7" :offset="1" class="register-box">
-            <img class="register-code" :src="codeURL" alt />
+            <img @click="changeCode" class="register-code" :src="codeURL" alt />
           </el-col>
         </el-row>
       </el-form-item>
@@ -89,6 +89,8 @@ const checkEmail = (rule, value, callback) => {
     callback(new Error("邮箱格式不对哦，请检查"));
   }
 };
+
+// import axios from "axios";
 
 export default {
   data() {
@@ -159,7 +161,16 @@ export default {
       //验证码图片地址
       codeURL:process.env.VUE_APP_URL+"/captcha?type=sendsms",
     };
-  }
+  },
+  methods: {
+    // changeCode(){
+    //   this.codeURL=process.env.VUE_APP_URL + "captcha?type=sendsms&t=" + Date.now();
+    // },
+    changeCode() {
+      this.codeURL =
+        process.env.VUE_APP_URL + "/captcha?type=sendsms&t=" + Date.now();
+    }
+  },
 };
 </script>
 
