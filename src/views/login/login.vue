@@ -60,6 +60,8 @@
   </div>
 </template>
 <script>
+//测试基地址
+window.console.log(process.env.VUE_APP_URL);
 //导入注册对话框组件
 import registerDialog from './components/registerDialog.vue';
 export default {
