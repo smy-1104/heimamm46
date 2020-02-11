@@ -7,7 +7,7 @@
     center
   >
     <el-form status-icon :model="form" :rules="rules" ref="registerForm">
-      <el-form-item label="头像">
+      <el-form-item label="头像" prop="avatar">
         <el-upload
           class="avatar-uploader"
           :action="uploadUrl"
@@ -49,7 +49,7 @@
       <el-form-item label="验证码" :label-width="formLabelWidth">
         <el-row>
           <el-col :span="16">
-            <el-input v-model="form.code1" autocomplete="off"></el-input>
+            <el-input v-model="form.rcode" autocomplete="off"></el-input>
           </el-col>
           <el-col :span="7" :offset="1">
             <!-- 点击获取 短信验证码 -->
@@ -63,7 +63,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      <el-button type="primary" @click="submitForm('registerForm')">确 定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -122,7 +122,11 @@ export default {
         //密码
         password: "",
         //图片验证码
-        code: ""
+        code: "",
+        //短信验证码
+        rcode: "",
+        // 用户的头像地址
+        avatar: ""
       },
       //校验规则
       rules: {
@@ -130,6 +134,13 @@ export default {
         image: [
           {
             required: true
+          }
+        ],
+        avatar: [
+          {
+            required: true,
+            message: "用户头像不能为空",
+            trigger: "blur"
           }
         ],
         username: [
@@ -194,6 +205,22 @@ export default {
     };
   },
   methods: {
+    //提交表单
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          // alert("对啦!");
+          //验证正确
+          this.$message.success("验证成功");
+        } else {
+          // console.log("验证失败");
+          //验证错误
+          this.$message.error("验证失败");
+          return false;
+        }
+      });
+    },
+
     // 上传成功回调函数
     // file 文件的各种信息
     // file.raw 文件对象
@@ -202,15 +229,17 @@ export default {
       window.console.log(res);
       this.imageUrl = URL.createObjectURL(file.raw);
       // URL.createObjectURL 生成的是本地的临时路径，刷新就没用了
+      //保存服务器返回的图片地址
+      this.form.avatar = res.data.file_path;
     },
     // 上传之前
     // file 是文件 对象
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg" || "image/png";
+      const isJPG = file.type === "image/jpeg" || "image/png" || "image/gif";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+        this.$message.error("上传头像图片只能是图片格式!");
       }
       if (!isLt2M) {
         this.$message.error("上传头像图片大小不能超过 2MB!");
@@ -222,14 +251,14 @@ export default {
     getSMS() {
       //手机号校验
       const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
-      if(reg.test(this.form.phone)!=true){
-        this.$message.error('手机号格式不对哦，请重新输入')
-        return
+      if (reg.test(this.form.phone) != true) {
+        this.$message.error("手机号格式不对哦，请重新输入");
+        return;
       }
       //图片验证码的校验
-      if(this.form.code.length!=4){
-        this.$message.error('图片验证码的长度不对哦，请检查')
-        return
+      if (this.form.code.length != 4) {
+        this.$message.error("图片验证码的长度不对哦，请检查");
+        return;
       }
 
       //如果为0开启倒计时
