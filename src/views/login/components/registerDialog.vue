@@ -35,7 +35,7 @@
       <el-form-item label="密码" prop="password" :label-width="formLabelWidth">
         <el-input show-password v-model="form.password" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="图形码" :label-width="formLabelWidth">
+      <el-form-item label="图形码" prop="code" :label-width="formLabelWidth">
         <el-row>
           <el-col :span="16">
             <el-input v-model="form.code" autocomplete="off"></el-input>
@@ -46,7 +46,7 @@
           </el-col>
         </el-row>
       </el-form-item>
-      <el-form-item label="验证码" :label-width="formLabelWidth">
+      <el-form-item label="验证码" prop="rcode" :label-width="formLabelWidth">
         <el-row>
           <el-col :span="16">
             <el-input v-model="form.rcode" autocomplete="off"></el-input>
@@ -62,7 +62,7 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">取 消</el-button>
+      <el-button @click="cancel('registerForm')">取 消</el-button>
       <el-button type="primary" @click="submitForm('registerForm')">确 定</el-button>
     </div>
   </el-dialog>
@@ -74,6 +74,9 @@
 
 //导入接口
 import { sendsms,register } from "@/api/register.js";
+
+//导入表单的校验函数
+// import { checkPhone,checkEmail} from "@/utils/validator.js"
 
 // 验证手机号的 函数
 const checkPhone = (rule, value, callback) => {
@@ -133,14 +136,14 @@ export default {
         //头像
         image: [
           {
-            required: true
+            required: true,
           }
         ],
         avatar: [
           {
             required: true,
             message: "用户头像不能为空",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         username: [
@@ -205,6 +208,19 @@ export default {
     };
   },
   methods: {
+
+    //清空表单
+    //关闭表单
+    cancel(formName){
+      this.$refs[formName].resetFields();
+      window.console.log(formName)
+      //关闭表单
+      this.dialogFormVisible = false;
+      // this.$refs[formName].resetFields()
+      //人为的清空
+      // this.imageUrl = ""
+    },
+
     //提交表单
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -225,6 +241,10 @@ export default {
               this.$message.success("恭喜你，注册成功啦")
               //关闭注册框
               this.dialogFormVisible = false;
+              //清空数据
+               this.$refs[formName].resetFields();
+               //人为的清空图片
+               this.imageUrl = "";
             } else if(res.data.code===201){
               //服务器返回的提示信息弹出来
               this.$message.error(res.data.message)
