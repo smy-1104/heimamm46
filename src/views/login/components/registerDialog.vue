@@ -212,7 +212,6 @@ export default {
     //清空表单
     //关闭表单
     cancel(formName){
-      this.$refs[formName].resetFields();
       window.console.log(formName)
       //关闭表单
       this.dialogFormVisible = false;
