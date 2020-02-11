@@ -73,7 +73,7 @@
 // import axios from "axios";
 
 //导入接口
-import { sendsms } from "../../../api/register.js";
+import { sendsms } from "@/api/register.js";
 
 // 验证手机号的 函数
 const checkPhone = (rule, value, callback) => {
