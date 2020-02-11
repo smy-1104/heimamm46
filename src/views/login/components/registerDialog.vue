@@ -69,11 +69,11 @@
 </template>
 
 <script>
-//导入
-// import  from ''
-
 //导入 axios
-import axios from "axios";
+// import axios from "axios";
+
+//导入接口
+import { sendsms } from "../../../api/register.js";
 
 // 验证手机号的 函数
 const checkPhone = (rule, value, callback) => {
@@ -129,7 +129,7 @@ export default {
         //头像
         image: [
           {
-            required: true,         
+            required: true
           }
         ],
         username: [
@@ -231,26 +231,31 @@ export default {
             clearInterval(interId);
           }
         }, 100);
-      }
 
-      axios({
-        url: process.env.VUE_APP_URL + "/sendsms",
-        method: "post",
-        data: {
+        // axios({
+        //   url: process.env.VUE_APP_URL + "/sendsms",
+        //   method: "post",
+        //   data: {
+        //     code: this.form.code,
+        //     phone: this.form.phone
+        //   },
+        //   //是否跨域携带cookie 默认是false
+        //   withCredentials: true
+        // })
+        //调用接口
+        sendsms({
           code: this.form.code,
           phone: this.form.phone
-        },
-        //是否跨域携带cookie 默认是false
-        withCredentials: true
-      }).then(res => {
-        //成功回调
-        window.console.log(res);
-        if (res.data.code === 200) {
-          this.$message.success("验证码获取成功：" + res.data.data.captcha);
-        } else if (res.data.code === 0) {
-          this.$message.error(res.data.message);
-        }
-      });
+        }).then(res => {
+          //成功回调
+          window.console.log(res);
+          if (res.data.code === 200) {
+            this.$message.success("验证码获取成功：" + res.data.data.captcha);
+          } else if (res.data.code === 0) {
+            this.$message.error(res.data.message);
+          }
+        });
+      }
     },
     //重新生成验证码
     changeCode() {
