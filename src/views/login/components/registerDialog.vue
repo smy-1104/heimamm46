@@ -73,7 +73,7 @@
 // import axios from "axios";
 
 //导入接口
-import { sendsms } from "@/api/register.js";
+import { sendsms,register } from "@/api/register.js";
 
 // 验证手机号的 函数
 const checkPhone = (rule, value, callback) => {
@@ -209,9 +209,28 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // alert("对啦!");
           //验证正确
-          this.$message.success("验证成功");
+          // this.$message.success("验证成功");
+          //调用接口
+          register({
+            username:this.form.username,
+            password:this.form.password,
+            phone:this.form.phone,
+            email:this.form.email,
+            avatar:this.form.avatar,
+            rcode:this.form.rcode,
+          }).then(res=>{
+            // window.console.log(res)
+            if (res.data.code===200) {
+              this.$message.success("恭喜你，注册成功啦")
+              //关闭注册框
+              this.dialogFormVisible = false;
+            } else if(res.data.code===201){
+              //服务器返回的提示信息弹出来
+              this.$message.error(res.data.message)
+            }
+          })
+
         } else {
           // console.log("验证失败");
           //验证错误
