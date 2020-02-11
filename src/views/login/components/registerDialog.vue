@@ -231,6 +231,8 @@ export default {
       // URL.createObjectURL 生成的是本地的临时路径，刷新就没用了
       //保存服务器返回的图片地址
       this.form.avatar = res.data.file_path;
+      //表单中头像字段的校验
+      this.$refs.registerForm.validateField('avatar');
     },
     // 上传之前
     // file 是文件 对象
