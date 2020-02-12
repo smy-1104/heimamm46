@@ -32,7 +32,7 @@
             <el-input placeholder="请输入验证码" prefix-icon="el-icon-key" v-model="loginForm.loginCode"></el-input>
           </el-col>
           <el-col class="item code-col" :span="7">
-            <img src="../../assets/login_captcha.png" alt class="login-code" />
+            <img @click="changeCode" :src="codeURL" alt class="login-code" />
           </el-col>
         </el-form-item>
         <!-- 用户协议 -->
@@ -66,7 +66,7 @@ window.console.log(process.env.VUE_APP_URL);
 import registerDialog from "./components/registerDialog.vue";
 
 // 验证手机号的 函数
-import {checkPhone} from "@/uitils/validator.js"
+import { checkPhone } from "@/uitils/validator.js";
 
 export default {
   //组件名字
@@ -128,12 +128,20 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      //验证码的地址
+      codeURL: process.env.VUE_APP_URL + "/captcha?type=login"
     };
   },
   //方法
 
   methods: {
+    //重新生成验证码
+    changeCode() {
+      this.codeURL =
+        process.env.VUE_APP_URL + "/captcha?type=login&t=" + Date.now();
+    },
+
     //提交表单
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
