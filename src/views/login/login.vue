@@ -14,7 +14,7 @@
       <!-- 登录表单 -->
       <el-form ref="loginForm" :rules="rules" :model="loginForm" label-width="48px" id="login-form">
         <!-- 手机号 -->
-        <el-form-item>
+        <el-form-item prop="phone">
           <el-input placeholder="请输入手机号" prefix-icon="el-icon-user" v-model="loginForm.phone"></el-input>
         </el-form-item>
         <!-- 密码 -->
@@ -63,12 +63,28 @@
 //测试基地址
 window.console.log(process.env.VUE_APP_URL);
 //导入注册对话框组件
-import registerDialog from './components/registerDialog.vue';
+import registerDialog from "./components/registerDialog.vue";
+
+// 验证手机号的 函数
+const checkPhone = (rule, value, callback) => {
+  // 接收参数 value
+  // 定义正则表达式
+  const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+  // 使用正则校验格式是否满足
+  if (reg.test(value) == true) {
+    // 对
+    callback();
+  } else {
+    // 错
+    callback(new Error("手机号格式不对哦，请检查"));
+  }
+};
+
 export default {
   //组件名字
   name: "login",
   //注册组件
-  components:{
+  components: {
     registerDialog //省略了 属性值
   },
   data() {
@@ -87,6 +103,17 @@ export default {
       },
       //校验规则
       rules: {
+        phone: [
+          {
+            required: true,
+            message: "手机号不能为空",
+            trigger: "blur"
+          },
+          {
+            validator: checkPhone,
+            trigger: "blur"
+          }
+        ],
         password: [
           {
             required: true,
@@ -117,7 +144,7 @@ export default {
     };
   },
   //方法
- 
+
   methods: {
     //提交表单
     submitForm(formName) {
@@ -138,7 +165,7 @@ export default {
     //this.$refs可以获取所有设置了ref属性的元素，包括组件
     //registerDialog和上边设置的属性要一致
     //也可以用 this.$refs[registerDialog]
-    showRegister(){
+    showRegister() {
       this.$refs.registerDialog.dialogFormVisible = true;
       //设置布尔值
     }
