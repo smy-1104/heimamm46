@@ -9,8 +9,8 @@
           <span>黑马面面</span>
         </div>
         <div class="right">
-          <img src="../../assets/logo.png" alt />
-          <span class="name">圆圆，你好</span>
+          <img :src=userIcon alt />
+          <span class="name">{{username}},你好</span>
           <el-button type="primary">退出</el-button>
         </div>
       </el-header>
@@ -23,7 +23,29 @@
 </template>
 
 <script>
-export default {};
+//导入接口
+import { info } from "@/api/index.js";
+export default {
+  name: "index",
+  data() {
+    //定义数据
+    return {
+      //用户名
+      username: "",
+      //用户头像
+      userIcon: ""
+    };
+  },
+  created() {
+    info().then(res => {
+        window.console.log(res);
+      this.username = res.data.data.username;
+      //服务器返回的头像地址不完整，需要进行拼接
+      this.userIcon = process.env.VUE_APP_URL + "/" + res.data.data.avatar;
+    });
+  }
+  
+};
 </script>
 
 <style lang="less">
@@ -65,16 +87,16 @@ body {
           display: flex;
           align-items: center;
 
-          img{
-              display: inline-block;
-              width: 43px;
-              height: 43px;
-              border-radius: 50%;
-              margin-right: 9px;
+          img {
+            display: inline-block;
+            width: 43px;
+            height: 43px;
+            border-radius: 50%;
+            margin-right: 9px;
           }
-          span.name{
-              margin-right: 38px;
-              font-size: 14px;
+          span.name {
+            margin-right: 38px;
+            font-size: 14px;
           }
         }
       }
