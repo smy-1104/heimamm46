@@ -154,7 +154,7 @@ export default {
           //验证正确
           // this.$message.success("验证成功");
           //增加选中状态的判断
-          if (this.loginForm.isChecked != true) {
+          if (this.loginForm.checked != true) {
             return this.$message.warning('请勾选用户协议');
           }
           //验证通过
