@@ -1,52 +1,40 @@
-//导入vue
+// 导入Vue
 import Vue from 'vue';
-//导入vue-router
+// 导入Vue-router
 import VueRouter from 'vue-router';
 
-//导入进度条组件
+// 导入 进度条组件
 import NProgress from 'nprogress';
-//导入进度条样式
+// 导入 进度条样式
 import 'nprogress/nprogress.css';
 
-//导入token 的工具函数 获取token
-import {
-    getToken,
-    removeToken
-} from "@/uitils/token.js";
+// 导入token的工具函数 获取token
+import { getToken, removeToken } from '@/uitils/token.js';
 
-//导入用户信息获取接口
-import {
-    info
-} from "@/api/index.js";
+// 导入 用户信息获取接口
+import { info } from '@/api/index.js';
 
-//导入elementui弹窗
-import {
-    Message
-} from "element-ui";
+// 按需导入 Element-ui的弹框
+import { Message } from 'element-ui';
 
-//注册一下 use
+// 注册一下 use
 Vue.use(VueRouter);
 
-
-//导入 组件 登录
+// 导入 组件 login
 import login from '../views/login/login.vue';
-
-//导入 组件 首页
+// 导入 组件 index
 import index from '../views/index/index.vue';
-//导入组件 嵌套路由 数据 chart
+
+// 导入组件 嵌套路由 数据 chart
 import chart from '@/views/index/chart/chart.vue';
-//导入组件 嵌套路由 用户 user
-import user from "@/views/index/user/user.vue";
-//导入组件 嵌套路由 题库 question
-import question from "@/views/index/question/question.vue";
-//导入组件 嵌套路由 企业 enterprise
-import enterprise from "@/views/index/enterprise/enterprise.vue";
-//导入组件 嵌套路由 学科 subject
-import subject from "@/views/index/subject/subject.vue";
-// import { removeToken } from '../uitils/token';
-
-
-
+// 导入组件 嵌套路由 用户 user
+import user from '@/views/index/user/user.vue';
+// 导入组件 嵌套路由 题库 question
+import question from '@/views/index/question/question.vue';
+// 导入组件 嵌套路由 企业 enterprise
+import enterprise from '@/views/index/enterprise/enterprise.vue';
+// 导入组件 嵌套路由 学科 subject
+import subject from '@/views/index/subject/subject.vue';
 
 //创建路由对象
 const router = new VueRouter({
@@ -98,6 +86,9 @@ const router = new VueRouter({
     ]
 });
 
+//定义路由白名单(不需要登录就可以访问的页面)
+const whitePaths = ['/login'];
+
 //导航守卫beforeEach 进入之前
 router.beforeEach((to, from, next) => {
     //开启进度条
@@ -105,7 +96,10 @@ router.beforeEach((to, from, next) => {
     //访问的页面是哪个
     // window.console.log(to.path)
     //向后走
-    if (to.path != "/login") {
+    // if (to.path != "/login") {
+    //白名单判断 不存在
+    //toLocaleLowerCase()转小写
+    if (whitePaths.includes(to.path.toLocaleLowerCase()) != true) {
         //需要判断登录状态
         //token非空
         if (getToken() == undefined) {
