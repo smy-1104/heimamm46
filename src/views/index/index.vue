@@ -9,9 +9,9 @@
           <span>黑马面面</span>
         </div>
         <div class="right">
-          <img :src=userIcon alt />
+          <img :src="userIcon" alt />
           <span class="name">{{username}},你好</span>
-          <el-button type="primary">退出</el-button>
+          <el-button type="primary" @click="logout">退出</el-button>
         </div>
       </el-header>
       <el-container>
@@ -24,7 +24,9 @@
 
 <script>
 //导入接口
-import { info } from "@/api/index.js";
+import { info, logout } from "@/api/index.js";
+//导入token函数
+import { removeToken } from "@/uitils/token.js";
 export default {
   name: "index",
   data() {
@@ -36,15 +38,41 @@ export default {
       userIcon: ""
     };
   },
+  methods: {
+    logout() {
+      this.$confirm("你确定要退出登录吗?", "友情提示", {
+        confirmButtonText: "狠心离开",
+        cancelButtonText: "继续看看",
+        type: "warning"
+        // type: 'error',
+        // type: 'success',
+      })
+        .then(() => {
+          //点击确定
+          logout().then(res=>{
+            //windows.console.log(res)
+            if (res.data.code===200) {
+              //移出token
+              removeToken()
+              //去登录页
+              this.$router.push("/login")
+            }
+          })
+        })
+        .catch(() => {
+          //点击取消
+          
+        });
+    }
+  },
   created() {
     info().then(res => {
-        window.console.log(res);
+      window.console.log(res);
       this.username = res.data.data.username;
       //服务器返回的头像地址不完整，需要进行拼接
       this.userIcon = process.env.VUE_APP_URL + "/" + res.data.data.avatar;
     });
   }
-  
 };
 </script>
 
