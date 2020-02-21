@@ -21,7 +21,12 @@
         <!-- 左侧栏 -->
         <el-aside class="my-aside" width="auto">
           <!-- 导航菜单 -->
-          <el-menu router :collapse="isCollapse" :default-active="$route.path" class="el-menu-vertical-demo">
+          <el-menu
+            router
+            :collapse="isCollapse"
+            :default-active="$route.path"
+            class="el-menu-vertical-demo"
+          >
             <el-menu-item index="/index/chart">
               <i class="el-icon-pie-chart"></i>
               <span slot="title">数据概览</span>
@@ -47,8 +52,7 @@
         <!-- 右侧栏 -->
         <el-main class="my-main">
           <!-- 设置路由出口 -->
-          <router-view>
-          </router-view>
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -59,7 +63,7 @@
 //导入接口
 import { info, logout } from "@/api/index.js";
 //导入token函数
-import { removeToken,getToken } from "@/uitils/token.js";
+import { removeToken, getToken } from "@/uitils/token.js";
 export default {
   name: "index",
   data() {
@@ -78,9 +82,9 @@ export default {
     //如果没有值
     if (getToken() == undefined) {
       //提示用户
-      this.$message.warning('亲爱的请先登录哦');
+      this.$message.warning("亲爱的请先登录哦");
       //打回登录页
-      this.$router.push('/login');
+      this.$router.push("/login");
     }
   },
   methods: {
@@ -111,10 +115,17 @@ export default {
   },
   created() {
     info().then(res => {
-      window.console.log(res);
-      this.username = res.data.data.username;
-      //服务器返回的头像地址不完整，需要进行拼接
-      this.userIcon = process.env.VUE_APP_URL + "/" + res.data.data.avatar;
+      //如果token有问题，提示删除 ，并返回登录页
+      if (res.data.code === 206) {
+        this.$message.warning("登录状态有误，请重新登陆");
+        removeToken();
+        this.$router.push("/login");
+      } else if (res.data.code === 200) {
+        // window.console.log(res);
+        this.username = res.data.data.username;
+        //服务器返回的头像地址不完整，需要进行拼接
+        this.userIcon = process.env.VUE_APP_URL + "/" + res.data.data.avatar;
+      }
     });
   }
 };
