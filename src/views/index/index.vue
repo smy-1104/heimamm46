@@ -1,10 +1,13 @@
 <template>
   <!-- 挂载的元素 -->
   <div id="app">
+    <!-- 盒子 -->
     <el-container class="my-container">
+      <!-- 头部 -->
       <el-header class="my-header">
         <div class="left">
-          <i class="el-icon-s-fold"></i>
+          <!-- 左侧图标 -->
+          <i @click="isCollapse = !isCollapse" class="el-icon-s-fold"></i>
           <img src="../../assets/index_logo.png" alt />
           <span>黑马面面</span>
         </div>
@@ -15,11 +18,9 @@
         </div>
       </el-header>
       <el-container>
-        <el-aside class="my-aside" width="200px">
-          <el-menu
-            default-active="2"
-            class="el-menu-vertical-demo"
-          >
+        <!-- 左侧栏 -->
+        <el-aside class="my-aside" width="auto">
+          <el-menu :collapse="isCollapse" default-active="2" class="el-menu-vertical-demo">
             <el-menu-item index="1">
               <i class="el-icon-pie-chart"></i>
               <span slot="title">数据概览</span>
@@ -42,6 +43,7 @@
             </el-menu-item>
           </el-menu>
         </el-aside>
+        <!-- 右侧栏 -->
         <el-main class="my-main">Main</el-main>
       </el-container>
     </el-container>
@@ -61,7 +63,9 @@ export default {
       //用户名
       username: "",
       //用户头像
-      userIcon: ""
+      userIcon: "",
+      //是否折叠
+      isCollapse: false
     };
   },
   methods: {
@@ -158,6 +162,11 @@ body {
       }
       .my-main {
         background-color: rgb(195, 186, 247);
+      }
+      //c3中的transition（过度），需要有开始和结束的值
+      .el-menu-vertical-demo:not(.el-menu--collapse) {
+        width: 200px;
+        min-height: 400px;
       }
     }
   }
