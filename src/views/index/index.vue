@@ -59,7 +59,7 @@
 //导入接口
 import { info, logout } from "@/api/index.js";
 //导入token函数
-import { removeToken } from "@/uitils/token.js";
+import { removeToken,getToken } from "@/uitils/token.js";
 export default {
   name: "index",
   data() {
@@ -72,6 +72,16 @@ export default {
       //是否折叠
       isCollapse: false
     };
+  },
+  //生命周期钩子
+  beforeCreate() {
+    //如果没有值
+    if (getToken() == undefined) {
+      //提示用户
+      this.$message.warning('亲爱的请先登录哦');
+      //打回登录页
+      this.$router.push('/login');
+    }
   },
   methods: {
     logout() {
