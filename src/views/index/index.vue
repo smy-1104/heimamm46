@@ -61,9 +61,11 @@
 
 <script>
 //导入接口
-import { info, logout } from "@/api/index.js";
+// import { info, logout } from "@/api/index.js";
+import { logout } from "@/api/index.js";
 //导入token函数
-import { removeToken, getToken } from "@/uitils/token.js";
+// import { removeToken, getToken } from "@/uitils/token.js";
+import { removeToken } from "@/uitils/token.js";
 export default {
   name: "index",
   data() {
@@ -78,15 +80,31 @@ export default {
     };
   },
   //生命周期钩子
-  beforeCreate() {
-    //如果没有值
-    if (getToken() == undefined) {
-      //提示用户
-      this.$message.warning("亲爱的请先登录哦");
-      //打回登录页
-      this.$router.push("/login");
-    }
-  },
+  // beforeCreate() {
+  //   //如果没有值
+  //   if (getToken() == undefined) {
+  //     //提示用户
+  //     this.$message.warning("亲爱的请先登录哦");
+  //     //打回登录页
+  //     this.$router.push("/login");
+  //   }
+  // },
+
+  // created() {
+  //   info().then(res => {
+  //     //如果token有问题，提示删除 ，并返回登录页
+  //     if (res.data.code === 206) {
+  //       this.$message.warning("登录状态有误，请重新登陆");
+  //       removeToken();
+  //       this.$router.push("/login");
+  //     } else if (res.data.code === 200) {
+  //       // window.console.log(res);
+  //       this.username = res.data.data.username;
+  //       //服务器返回的头像地址不完整，需要进行拼接
+  //       this.userIcon = process.env.VUE_APP_URL + "/" + res.data.data.avatar;
+  //     }
+  //   });
+  // }
   methods: {
     logout() {
       this.$confirm("你确定要退出登录吗?", "友情提示", {
@@ -112,21 +130,6 @@ export default {
           //点击取消
         });
     }
-  },
-  created() {
-    info().then(res => {
-      //如果token有问题，提示删除 ，并返回登录页
-      if (res.data.code === 206) {
-        this.$message.warning("登录状态有误，请重新登陆");
-        removeToken();
-        this.$router.push("/login");
-      } else if (res.data.code === 200) {
-        // window.console.log(res);
-        this.username = res.data.data.username;
-        //服务器返回的头像地址不完整，需要进行拼接
-        this.userIcon = process.env.VUE_APP_URL + "/" + res.data.data.avatar;
-      }
-    });
   }
 };
 </script>
