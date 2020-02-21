@@ -1,10 +1,21 @@
 //导入vue
-import Vue from 'vue'
+import Vue from 'vue';
 //导入vue-router
-import VueRouter from 'vue-router'
+import VueRouter from 'vue-router';
+
+//导入进度条组件
+import NProgress from 'nprogress';
+//导入进度条样式
+import 'nprogress/nprogress.css';
 //注册一下 use
 Vue.use(VueRouter)
 
+
+//导入 组件 登录
+import login from '../views/login/login.vue';
+
+//导入 组件 首页
+import index from '../views/index/index.vue';
 //导入组件 嵌套路由 数据 chart
 import chart from '@/views/index/chart/chart.vue';
 //导入组件 嵌套路由 用户 user
@@ -18,11 +29,7 @@ import subject from "@/views/index/subject/subject.vue";
 
 
 
-//导入 组件 登录
-import login from '../views/login/login.vue';
 
-//导入 组件 首页
-import index from '../views/index/index.vue';
 //创建路由对象
 const router = new VueRouter({
     //路由规则
@@ -71,6 +78,21 @@ const router = new VueRouter({
             ]
         },
     ]
+});
+
+//导航守卫beforeEach 进入之前
+router.beforeEach((to,from,next)=>{
+    //开启进度条
+    NProgress.start()
+    //向后走
+    next()
 })
+//导航守卫afterEach 进入完成之后
+//router.afterEach((to,from)=>{})
+router.afterEach(()=>{
+    NProgress.done()
+})
+
+
 //暴露出去
 export default router
