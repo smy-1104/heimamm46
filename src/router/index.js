@@ -113,6 +113,8 @@ router.beforeEach((to, from, next) => {
             // this是不是vue实例
             // this.$message.warning('请先登录');
             Message.warning("登录状态有误，请检查");
+            NProgress.done();
+            //打开登录页需要关闭进度条，因为不会触发afterEach
             // this.$router.push('/login')
             next('/login');
         } else {
@@ -120,10 +122,11 @@ router.beforeEach((to, from, next) => {
             info().then(res => {
                 //window.console.log(res)
                 if (res.data.code === 206) {
+                     //删除token
+                    removeToken();
                     //提示用户
                     Message.warning('登录状态有误，请检查');
-                    //删除token
-                    removeToken();
+                    NProgress.done();
                     //返回登录页
                     next('/login');
                 } else if (res.data.code === 200) {
