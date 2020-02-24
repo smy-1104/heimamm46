@@ -12,8 +12,8 @@
           <span>黑马面面</span>
         </div>
         <div class="right">
-          <img :src="userIcon" alt />
-          <span class="name">{{username}},你好</span>
+          <img :src="$store.state.userIcon" alt />
+          <span class="name">{{ $store.state.username }},你好</span>
           <el-button type="primary" @click="logout">退出</el-button>
         </div>
       </el-header>

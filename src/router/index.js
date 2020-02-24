@@ -24,6 +24,9 @@ import {
     Message
 } from 'element-ui';
 
+//导入仓库
+import store from "@/store/index.js";
+
 // 注册一下 use
 Vue.use(VueRouter);
 
@@ -160,9 +163,12 @@ router.beforeEach((to, from, next) => {
                 } else if (res.data.code === 200) {
                     //处理用户的信息 用户的名字
                     const username = res.data.data.username;
-                     //处理用户的信息 用户的头像
-                    const userIcon = process.env.VUE_APP_URL+"/"+res.data.data.avatar;
-                   window.console.log(username,userIcon);
+                    //处理用户的信息 用户的头像
+                    const userIcon = process.env.VUE_APP_URL + "/" + res.data.data.avatar;
+                    //调用仓库的方法
+                    //登录成功后把数据保存到仓库中
+                   store.commit("changeIcon",userIcon);
+                   store.commit("changeName",username);
                     //获取成功
                     //放走
                     next();
@@ -180,7 +186,7 @@ router.afterEach(() => {
     //关闭进度条
     NProgress.done();
     //修改标题(没搞出来)
-    //window.document.title = to.meta.title;
+    // window.document.title = to.meta.title;
 })
 
 

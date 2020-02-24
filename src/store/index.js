@@ -17,7 +17,7 @@ const store = new Vuex.Store({
              state.userIcon = newIcon
         },
         changeName(state,newName){
-             state.userName = newName
+             state.username = newName
         },
     }
 })
