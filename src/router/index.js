@@ -9,13 +9,20 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 // 导入token的工具函数 获取token
-import { getToken, removeToken } from '@/uitils/token.js';
+import {
+    getToken,
+    removeToken
+} from '@/uitils/token.js';
 
 // 导入 用户信息获取接口
-import { info } from '@/api/index.js';
+import {
+    info
+} from '@/api/index.js';
 
 // 按需导入 Element-ui的弹框
-import { Message } from 'element-ui';
+import {
+    Message
+} from 'element-ui';
 
 // 注册一下 use
 Vue.use(VueRouter);
@@ -43,50 +50,71 @@ const router = new VueRouter({
     routes: [
         //空地址的重定向
         {
-            path:"/",
-            redirect:"/login"
+            path: "/",
+            redirect: "/login"
         },
         //登录
         {
             path: "/login",
-            component: login
+            component: login,
+            meta: {
+                title: "登录"
+            }
         },
         //首页
         {
             path: "/index",
             component: index,
+            meta: {
+                title: "首页"
+            },
             //嵌套路由
             children: [
                 //chart
                 {
                     //路径不需要写/ 被解析为 /index/chart
                     path: "chart",
-                    component: chart
+                    component: chart,
+                    meta: {
+                        title: "数据概览"
+                    }
                 },
                 //user
                 {
                     //路径不需要写/ 被解析为 /index/user
                     path: "user",
-                    component: user
+                    component: user,
+                    meta: {
+                        title: "用户列表"
+                    }
                 },
                 //question
                 {
                     //路径不需要写/ 被解析为 /index/question
                     path: "question",
-                    component: question
+                    component: question,
+                    meta: {
+                        title: "题库列表"
+                    }
                 },
                 //enterprise
                 {
                     //路径不需要写/ 被解析为 /index/enterprise
                     path: "enterprise",
-                    component: enterprise
+                    component: enterprise,
+                    meta: {
+                        title: "企业列表"
+                    }
                 },
                 //subject
                 {
                     //路径不需要写/ 被解析为 /index/subject
                     path: "subject",
-                    component: subject
-                }
+                    component: subject,
+                    meta: {
+                        title: "学科列表"
+                    }
+                },
             ]
         },
     ]
@@ -122,7 +150,7 @@ router.beforeEach((to, from, next) => {
             info().then(res => {
                 //window.console.log(res)
                 if (res.data.code === 206) {
-                     //删除token
+                    //删除token
                     removeToken();
                     //提示用户
                     Message.warning('登录状态有误，请检查');
@@ -144,7 +172,10 @@ router.beforeEach((to, from, next) => {
 //导航守卫afterEach 进入完成之后
 //router.afterEach((to,from)=>{})
 router.afterEach(() => {
-    NProgress.done()
+    //关闭进度条
+    NProgress.done();
+    //修改标题
+    window.document.title =to.meta.title;
 })
 
 
