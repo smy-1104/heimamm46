@@ -2,7 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 
 //导入路由
-import router from "./router/index.js"
+import router from "./router/index.js";
+//导入仓库
+import store from "./store/index.js";
 
 
 //导入element-ui
@@ -21,5 +23,7 @@ Vue.config.productionTip = false
 new Vue({
   render: h => h(App),
   //挂载到VUE实例上 路由
-  router
+  router,
+  //挂载到VUE实例上 仓库
+  store
 }).$mount('#app')
