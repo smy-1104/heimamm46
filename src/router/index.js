@@ -158,6 +158,11 @@ router.beforeEach((to, from, next) => {
                     //返回登录页
                     next('/login');
                 } else if (res.data.code === 200) {
+                    //处理用户的信息 用户的名字
+                    const username = res.data.data.username;
+                     //处理用户的信息 用户的头像
+                    const userIcon = process.env.VUE_APP_URL+"/"+res.data.data.avatar;
+                   window.console.log(username,userIcon);
                     //获取成功
                     //放走
                     next();
@@ -174,10 +179,10 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
     //关闭进度条
     NProgress.done();
-    //修改标题
-    window.document.title =to.meta.title;
+    //修改标题(没搞出来)
+    //window.document.title = to.meta.title;
 })
 
 
 //暴露出去
-export default router
+export default router;
