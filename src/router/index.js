@@ -36,10 +36,16 @@ import enterprise from '@/views/index/enterprise/enterprise.vue';
 // 导入组件 嵌套路由 学科 subject
 import subject from '@/views/index/subject/subject.vue';
 
+
 //创建路由对象
 const router = new VueRouter({
     //路由规则
     routes: [
+        //空地址的重定向
+        {
+            path:"/",
+            redirect:"/login"
+        },
         //登录
         {
             path: "/login",
