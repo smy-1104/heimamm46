@@ -121,6 +121,10 @@ export default {
             if (res.data.code === 200) {
               //移出token
               removeToken();
+              //用户退出的时候，头像和名字也移除
+              //移出vuex中的头像和名字
+              this.$store.commit('changeIcon','')
+              this.$store.commit('changeName','')
               //去登录页
               this.$router.push("/login");
             }
